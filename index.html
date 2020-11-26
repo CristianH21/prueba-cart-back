@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket</title>
+</head>
+<body>
+    
+    <p> Counter: <span id="counter">0</span></p>
+    <button onclick="ajaxRequest()">generate shipment</button>
+
+    <p id="demo"></p>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let counter = 0;
+
+        socket.on('counter', (count) => {
+            counter = counter + count;
+            document.querySelector('#counter').innerHTML = counter;
+        });
+
+        const ajaxRequest = () => {
+
+            const xhttp = new XMLHttpRequest();
+           
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    socket.emit('counter');
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            };
+
+            xhttp.open("POST", "", true);
+            xhttp.send();
+        }
+    </script>
+
+</body>
+</html>
